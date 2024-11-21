@@ -43,4 +43,4 @@ CORAL's architecture is designed to be flexible, featuring layers for:
 ## Architectural Decisions
 - As we all have different experiences with Java & Kotlin, we split the project 2 ways.
 - We first built out the project using JavaSwing as a proof-of-concept. 
-- We are currently developing the full version in Android Studio using Kotlin. The logic as well as a lot of the code from the proof of concept can be used in the full version.
+- We are currently developing the full version in Intellij using Kotlin. The logic as well as a lot of the code from the proof of concept can be used in the full version.
