@@ -2,91 +2,198 @@ package com.coral.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.coral.R
 import com.coral.adapters.ActivityAdapter
+import com.coral.databinding.ActivityDashboardBinding
 import com.coral.models.ActivityLog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class DashboardActivity : AppCompatActivity() {
-    private lateinit var welcomeText: TextView
-    private lateinit var totalEmissionsText: TextView
-    private lateinit var monthlyGoalText: TextView
-    private lateinit var addActivityButton: Button
-    private lateinit var activitiesRecyclerView: RecyclerView
+    private lateinit var binding: ActivityDashboardBinding
     private lateinit var adapter: ActivityAdapter
     private var activities = mutableListOf<ActivityLog>()
+    private var valueEventListener: ValueEventListener? = null
 
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance().reference
     private val userId = auth.currentUser?.uid ?: ""
 
+    companion object {
+        private const val TAG = "DashboardActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Set up action bar
-        supportActionBar?.apply {
-            title = "CORAL Dashboard"
-            setDisplayHomeAsUpEnabled(false)
-        }
-
-        initializeViews()
-        setupRecyclerView()
-        setupAddActivityButton()
-        loadActivities()
-        updateWelcomeText()
+        setupUI()
         checkAuthState()
     }
 
-    private fun initializeViews() {
-        welcomeText = findViewById(R.id.welcomeText)
-        totalEmissionsText = findViewById(R.id.totalEmissionsText)
-        monthlyGoalText = findViewById(R.id.monthlyGoalText)
-        addActivityButton = findViewById(R.id.addActivityButton)
-        activitiesRecyclerView = findViewById(R.id.activitiesRecyclerView)
+    private fun setupUI() {
+        setupToolbar()
+        setupRecyclerView()
+        setupAddActivityButton()
+        updateWelcomeText()
     }
 
-    private fun updateWelcomeText() {
-        val userName = auth.currentUser?.displayName ?: "User"
-        welcomeText.text = "Welcome, $userName!"
+    private fun setupToolbar() {
+        supportActionBar?.title = getString(R.string.dashboard)
     }
 
     private fun setupRecyclerView() {
         adapter = ActivityAdapter(activities) { activity ->
-            deleteActivity(activity)
+            showDeleteDialog(activity)
         }
-
-        activitiesRecyclerView.apply {
+        binding.activitiesRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@DashboardActivity)
             adapter = this@DashboardActivity.adapter
         }
     }
 
     private fun setupAddActivityButton() {
-        addActivityButton.setOnClickListener {
+        binding.addActivityButton.setOnClickListener {
             startActivity(Intent(this, AddActivityLogActivity::class.java))
         }
+    }
+
+    private fun loadActivities() {
+        if (auth.currentUser == null) {
+            navigateToSignIn()
+            return
+        }
+
+        valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
+                    activities.clear()
+                    var totalEmissions = 0.0
+                    snapshot.children.forEach { child ->
+                        child.getValue(ActivityLog::class.java)?.let { activity ->
+                            activities.add(activity)
+                            totalEmissions += activity.emission
+                        }
+                    }
+                    activities.sortByDescending { it.timestamp }
+                    updateDashboard(activities, totalEmissions)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error processing activities", e)
+                    handleError(e)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Database error", error.toException())
+                handleError(error.toException())
+            }
+        }
+
+        database.child("users").child(userId).child("activities")
+            .addValueEventListener(valueEventListener!!)
+    }
+
+    private fun handleError(error: Exception) {
+        if (!isFinishing) {
+            Toast.makeText(
+                this,
+                "Error loading activities: ${error.message}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun updateDashboard(activities: List<ActivityLog>, totalEmissions: Double) {
+        binding.totalEmissionsText.text = String.format("%.2f kg CO₂", totalEmissions)
+        binding.monthlyGoalText.text = String.format(
+            "Monthly Goal: %.1f%%",
+            calculateMonthlyGoal(totalEmissions)
+        )
+        adapter.updateActivities(activities)
+    }
+
+    private fun calculateMonthlyGoal(totalEmissions: Double): Double {
+        val monthlyTarget = 100.0
+        return (totalEmissions / monthlyTarget) * 100
+    }
+
+    private fun showDeleteDialog(activity: ActivityLog) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_delete_title))
+            .setMessage(getString(R.string.dialog_delete_message))
+            .setPositiveButton(getString(R.string.dialog_yes)) { _, _ ->
+                deleteActivity(activity)
+            }
+            .setNegativeButton(getString(R.string.dialog_no), null)
+            .show()
+    }
+
+    private fun deleteActivity(activity: ActivityLog) {
+        database.child("users")
+            .child(userId)
+            .child("activities")
+            .child(activity.id)
+            .removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, getString(R.string.success_delete), Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.error_delete, e.message),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
     }
 
     private fun checkAuthState() {
         if (auth.currentUser == null) {
             navigateToSignIn()
+        } else {
+            loadActivities()
+        }
+    }
+
+    private fun showSignOutDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_sign_out_title))
+            .setMessage(getString(R.string.dialog_sign_out_message))
+            .setPositiveButton(getString(R.string.dialog_yes)) { _, _ ->
+                signOut()
+            }
+            .setNegativeButton(getString(R.string.dialog_no), null)
+            .show()
+    }
+
+    private fun signOut() {
+        cleanupListener()
+        auth.signOut()
+        navigateToSignIn()
+    }
+
+    private fun cleanupListener() {
+        valueEventListener?.let { listener ->
+            database.child("users").child(userId).child("activities")
+                .removeEventListener(listener)
+            valueEventListener = null
         }
     }
 
     private fun navigateToSignIn() {
-        val intent = Intent(this, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val intent = Intent(this, SignInActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         startActivity(intent)
         finish()
     }
@@ -106,109 +213,21 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSignOutDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Sign Out")
-            .setMessage("Are you sure you want to sign out?")
-            .setPositiveButton("Yes") { _, _ ->
-                signOut()
-            }
-            .setNegativeButton("No", null)
-            .show()
-    }
-
-    private fun signOut() {
-        FirebaseAuth.getInstance().signOut()
-        navigateToSignIn()
-    }
-
-    private fun loadActivities() {
-        database.child("users").child(userId).child("activities")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    activities.clear()
-                    var totalEmissions = 0.0
-
-                    snapshot.children.forEach { child ->
-                        child.getValue(ActivityLog::class.java)?.let { activity ->
-                            activities.add(activity)
-                            totalEmissions += activity.emission
-                        }
-                    }
-
-                    // Sort activities by timestamp (most recent first)
-                    activities.sortByDescending { it.timestamp }
-
-                    updateDashboard(activities, totalEmissions)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(
-                        this@DashboardActivity,
-                        "Error loading activities: ${error.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            })
-    }
-
-    private fun deleteActivity(activity: ActivityLog) {
-        AlertDialog.Builder(this)
-            .setTitle("Delete Activity")
-            .setMessage("Are you sure you want to delete this activity?")
-            .setPositiveButton("Delete") { _, _ ->
-                performDelete(activity)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun performDelete(activity: ActivityLog) {
-        database.child("users")
-            .child(userId)
-            .child("activities")
-            .child(activity.id)
-            .removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Activity deleted", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "Failed to delete: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-    }
-
-    private fun updateDashboard(activities: List<ActivityLog>, totalEmissions: Double) {
-        // Update total emissions display
-        totalEmissionsText.text = String.format("%.2f kg CO₂", totalEmissions)
-
-        // Calculate and update monthly goal
-        // You can implement your own logic for calculating the monthly goal
-        val monthlyGoal = calculateMonthlyGoal(totalEmissions)
-        monthlyGoalText.text = String.format("Monthly Goal: %.1f%%", monthlyGoal)
-
-        // Update RecyclerView
-        adapter.updateActivities(activities)
-    }
-
-    private fun calculateMonthlyGoal(totalEmissions: Double): Double {
-        // Implement your monthly goal calculation logic here
-        // This is a placeholder implementation
-        val monthlyTarget = 100.0 // kg CO₂
-        return (totalEmissions / monthlyTarget) * 100
-    }
-
     override fun onResume() {
         super.onResume()
-        // Refresh activities when returning to dashboard
-        loadActivities()
         updateWelcomeText()
+        if (auth.currentUser != null && valueEventListener == null) {
+            loadActivities()
+        }
     }
 
-    companion object {
-        private const val TAG = "DashboardActivity"
+    private fun updateWelcomeText() {
+        val userName = auth.currentUser?.displayName ?: "User"
+        binding.welcomeText.text = getString(R.string.welcome_user, userName)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cleanupListener()
     }
 }

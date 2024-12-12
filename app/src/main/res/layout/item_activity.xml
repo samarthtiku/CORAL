@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="wrap_content"
-                                   android:layout_marginBottom="8dp"
-                                   app:cardCornerRadius="8dp"
-                                   app:cardElevation="4dp">
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="4dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -22,33 +25,43 @@
                     android:id="@+id/activityTypeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Driving Car"/>
 
             <TextView
                     android:id="@+id/emissionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_marginTop="4dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    tools:text="2.45 kg CO₂"/>
 
             <TextView
                     android:id="@+id/dateText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textSize="12sp"/>
+                    android:textColor="?android:attr/textColorTertiary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-light"
+                    tools:text="Dec 15, 2023 at 2:30 PM"/>
 
         </LinearLayout>
 
         <ImageButton
                 android:id="@+id/btnDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Delete activity"
-                android:padding="8dp"
-                android:src="@drawable/ic_delete"/>
+                android:contentDescription="@string/desc_delete_activity"
+                android:padding="12dp"
+                android:src="@drawable/ic_delete"
+                app:tint="?android:attr/textColorSecondary"/>
 
     </RelativeLayout>
 

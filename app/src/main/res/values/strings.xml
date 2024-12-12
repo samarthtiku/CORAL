@@ -1,51 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Existing strings -->
+    <!-- App Information -->
     <string name="app_name">CORAL</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up</string>
+
+    <!-- Screen Titles -->
     <string name="dashboard">Dashboard</string>
     <string name="profile">Profile</string>
     <string name="recommendations">Recommendations</string>
     <string name="add_activity_log">Add Activity Log</string>
+    <string name="welcome_coral">Welcome to CORAL</string>
 
-    <!-- Authentication strings -->
+    <!-- Authentication -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="welcome_coral">Welcome to CORAL</string>
     <string name="no_account">Don\'t have an account? Sign Up</string>
     <string name="have_account">Already have an account? Sign In</string>
 
-    <!-- Error messages -->
+    <!-- Dashboard -->
+    <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="total_emissions">Total Emissions: %1$.2f kg CO₂</string>
+    <string name="monthly_goal">Monthly Goal: %1$.1f%%</string>
+    <string name="no_activities">No activities recorded yet</string>
+    <string name="add_activity">Add Activity</string>
+    <string name="save_activity">Save Activity</string>
+
+    <!-- Activity Management -->
+    <string name="select_activity">Select Activity</string>
+    <string name="enter_value">Enter value</string>
+    <string name="preview_emissions">Carbon Emissions</string>
+    <string name="activity_deleted">Activity deleted</string>
+    <string name="undo">Undo</string>
+
+    <!-- Validation Messages -->
     <string name="error_required_field">This field is required</string>
     <string name="error_invalid_email">Please enter a valid email address</string>
     <string name="error_invalid_password">Password must be at least 6 characters</string>
     <string name="error_passwords_dont_match">Passwords don\'t match</string>
+    <string name="error_weak_password">Password is too weak - use at least 6 characters</string>
+    <string name="error_invalid_value">Please enter a valid value</string>
+    <string name="error_negative_value">Value cannot be negative</string>
+    <string name="error_too_large">Value seems too large</string>
+    <string name="error_select_activity">Please select an activity</string>
+
+    <!-- Error Messages -->
     <string name="error_auth_failed">Authentication failed</string>
     <string name="error_network">Network error. Please check your connection</string>
     <string name="error_user_exists">An account already exists with this email</string>
     <string name="error_user_not_found">No account exists with this email</string>
-    <string name="error_weak_password">Password is too weak - use at least 6 characters</string>
+    <string name="error_loading_activities">Error loading activities: %1$s</string>
+    <string name="error_connection">Connection error. Please check your internet connection</string>
+    <string name="error_firebase_init">Failed to initialize Firebase services</string>
+    <string name="error_save_activity">Failed to save activity: %1$s</string>
+    <string name="error_permission_denied">Permission denied. Please try signing in again</string>
+    <string name="error_delete">Failed to delete: %1$s</string>
 
-    <!-- Success messages -->
+    <!-- Success Messages -->
     <string name="success_sign_in">Successfully signed in</string>
     <string name="success_sign_up">Account created successfully</string>
     <string name="success_sign_out">Successfully signed out</string>
+    <string name="success_delete">Activity deleted successfully</string>
 
-    <!-- Dialog messages -->
+    <!-- Dialog Messages -->
     <string name="dialog_sign_out_title">Sign Out</string>
     <string name="dialog_sign_out_message">Are you sure you want to sign out?</string>
+    <string name="dialog_delete_title">Delete Activity</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this activity?</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
-    <!-- Progress indicators -->
+    <!-- Progress Indicators -->
     <string name="loading_sign_in">Signing in…</string>
     <string name="loading_sign_up">Creating account…</string>
+    <string name="state_connecting">Connecting…</string>
+    <string name="state_connected">Connected</string>
+    <string name="state_disconnected">Disconnected</string>
+    <string name="state_reconnecting">Reconnecting…</string>
 
-    <!-- Content descriptions -->
+    <!-- Connection Status -->
+    <string name="status_offline">Working offline</string>
+    <string name="status_syncing">Syncing data…</string>
+    <string name="status_online">Connected</string>
+    <string name="status_error">Connection error</string>
+
+    <!-- Session Management -->
+    <string name="session_expired">Session expired. Please sign in again</string>
+    <string name="session_invalid">Invalid session. Please sign in again</string>
+    <string name="session_terminated">Session terminated</string>
+
+    <!-- Data Synchronization -->
+    <string name="sync_pending">Changes will sync when online</string>
+    <string name="sync_complete">All changes synced</string>
+    <string name="sync_failed">Sync failed: %1$s</string>
+    <string name="retry">Retry</string>
+
+    <!-- Content Descriptions -->
     <string name="desc_password_visibility">Toggle password visibility</string>
     <string name="desc_coral_logo">CORAL logo</string>
+    <string name="desc_delete_activity">Delete activity</string>
+    <string name="desc_add_activity">Add new activity</string>
+    <string name="desc_sync_status">Sync status</string>
+    <string name="desc_connection_status">Connection status</string>
 </resources>
