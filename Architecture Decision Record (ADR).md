@@ -114,49 +114,6 @@ Centralize calculations within the `CarbonCalculator` utility class.
 
 ---
 
-## 🚀 ADR 8: Recommendations Engine
 
-🟦 **Context**
-Provide actionable insights to users based on their carbon footprint.
-
-🟩 **Decision**
-Develop a `RecommendationEngine` to generate activity-based suggestions dynamically.
-
-🟨 **Consequences**
-- ✅ Personalizes user experience.
-- ✅ Aligns with CORAL's goal of promoting carbon reduction.
-- ❌ Dependency on accurate activity logging for meaningful recommendations.
-
----
-
-## 💉 ADR 9: Dependency Injection (Planned)
-
-🟦 **Context**
-Simplify dependency management and improve modularity.
-
-🟩 **Decision**
-Propose the use of Dagger or Koin for Dependency Injection.
-
-🟨 **Consequences**
-- ✅ Improves code modularity.
-- ✅ Simplifies unit testing.
-- ❌ Not currently implemented; planned for future development.
-- ❌ Adds initial setup complexity.
-
----
-
-## 🗂️ ADR 10: Local Caching for Offline Support (Planned)
-
-🟦 **Context**
-Ensure functionality in offline scenarios.
-
-🟩 **Decision**
-Implement local caching using Room or SQLite for activity data.
-
-🟨 **Consequences**
-- ✅ Enhances app usability during network issues.
-- ✅ Reduces reliance on Firebase for real-time operations.
-- ❌ Not currently implemented; planned for future development.
-- ❌ Increases complexity of synchronization logic.
 
 ---
