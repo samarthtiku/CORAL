@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "579526433653",
+    "project_id": "coral-219de",
+    "storage_bucket": "coral-219de.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579526433653:android:0658d1ebd2c76e19b6113c",
+        "android_client_info": {
+          "package_name": "com.coral"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf7fvcrWOQ59OxBo2FB7xCC0SkCUXvnXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

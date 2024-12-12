@@ -1,0 +1,51 @@
+<resources>
+    <!-- Existing strings -->
+    <string name="app_name">CORAL</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="profile">Profile</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="add_activity_log">Add Activity Log</string>
+
+    <!-- Authentication strings -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="welcome_coral">Welcome to CORAL</string>
+    <string name="no_account">Don\'t have an account? Sign Up</string>
+    <string name="have_account">Already have an account? Sign In</string>
+
+    <!-- Error messages -->
+    <string name="error_required_field">This field is required</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="error_invalid_password">Password must be at least 6 characters</string>
+    <string name="error_passwords_dont_match">Passwords don\'t match</string>
+    <string name="error_auth_failed">Authentication failed</string>
+    <string name="error_network">Network error. Please check your connection</string>
+    <string name="error_user_exists">An account already exists with this email</string>
+    <string name="error_user_not_found">No account exists with this email</string>
+    <string name="error_weak_password">Password is too weak - use at least 6 characters</string>
+
+    <!-- Success messages -->
+    <string name="success_sign_in">Successfully signed in</string>
+    <string name="success_sign_up">Account created successfully</string>
+    <string name="success_sign_out">Successfully signed out</string>
+
+    <!-- Dialog messages -->
+    <string name="dialog_sign_out_title">Sign Out</string>
+    <string name="dialog_sign_out_message">Are you sure you want to sign out?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <!-- Progress indicators -->
+    <string name="loading_sign_in">Signing in…</string>
+    <string name="loading_sign_up">Creating account…</string>
+
+    <!-- Content descriptions -->
+    <string name="desc_password_visibility">Toggle password visibility</string>
+    <string name="desc_coral_logo">CORAL logo</string>
+</resources>
