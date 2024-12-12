@@ -19,6 +19,9 @@ CORAL is an Android application designed to calculate carbon emissions based on 
 - **Activity Selection**: Dropdown menu for choosing activity types (e.g., transportation, food).
 - **Carbon Calculation**: Automated emission calculations based on user input.
 - **User Authentication**: Secure login and registration using Firebase.
+- **Data Persistence**: Store user activities and emissions data in Firebase Realtime Database.
+- **Activity History**: View past logged activities and corresponding emissions.
+- **Intuitive User Interface**: Clean, user-friendly design following Material Design principles.
 
 ---
 
