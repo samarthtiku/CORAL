@@ -55,7 +55,7 @@
 
         <!-- Firebase Service -->
         <service
-                android:name=".services.CoralFirebaseMessagingService"
+                android:name="com.coral.services.CoralFirebaseMessagingService"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
